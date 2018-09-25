@@ -10,7 +10,8 @@ class App extends React.Component {
         this.state = {
             cidade: '',
             formErrors: null,
-            previsao: null
+            previsao: null,
+            result: []
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -22,8 +23,7 @@ class App extends React.Component {
         const fieldValue = target.type === "checkbox" ? target.checked : target.value;        
 
         this.setState({ 
-            cidade: fieldValue,
-            formErrors: null
+            cidade: fieldValue
         });
     }
 
@@ -40,29 +40,37 @@ class App extends React.Component {
 
         fetch(urlWeather, {
             method: "GET"
-        }).then(function(response) {
+        }).then(response => {
             if (response.ok) {
                 return response.json();
             } else {
                 throw new Error("Could not reach the API: " + response.statusText);
             }
-        }).then(function(data) {
+        }).then(data => {
             if(data.query.results.channel) {
                 const channel = data.query.results.channel;
 
                 const result = `
-                    <p><strong>${ channel.location.city }, ${ channel.location.region } - ${ channel.location.country },</strong></p>
-                    <p><strong>${ channel.item.condition.temp }°C ${ channel.item.condition.text } </strong></p>
-                    <p>Sensação <strong>${ channel.atmosphere.humidity }°C</strong></p>
-                    <p>Vento <strong>${ channel.atmosphere.humidity }Km/h</strong></p>
-                    <p>Humidade <strong>${ channel.atmosphere.humidity }%</strong></p>
+                    <div class="result">
+                        <p><strong>${ channel.location.city }, ${ channel.location.region } - ${ channel.location.country }</strong></p>
+                        <p><strong>${ channel.item.condition.temp }°C ${ channel.item.condition.text } </strong></p>
+                        <p>
+                            <span class="high-low">high ${ channel.item.forecast.high } - low ${ channel.item.forecast.low }</span>
+                            <span>Sensação <strong>${ channel.item.condition.code }°C</strong></span>
+                        </p>
+                        <p>
+                            <span>Vento <strong>${ channel.wind.speed }Km/h</strong></span>
+                            <span>Humidade <strong>${ channel.atmosphere.humidity }%</strong></span>
+                        </p>
+                    </div>
                 `;
                 
                 //console.log(result);
                 const msg = "Temperature in " + channel.location.city + " is " + data.query.results.channel.item.condition.temp + "°C";
 
                 _self.setState({
-                    formErrors: msg
+                    formErrors: msg,
+                    result: result
                 });
             } else {
                 throw new Error("Could not reach the API: ");
@@ -77,11 +85,18 @@ class App extends React.Component {
         });
     }
 
+    unescapeHTML(html) {
+        var escapeEl = document.createElement('textarea');
+        escapeEl.innerHTML = html;
+        return escapeEl.textContent;
+    }
+
     render() {
         return (
             <section className="jumbotron text-center">
                 <div className="container">
                     <h1 className="jumbotron-heading">Previsão do tempo</h1>
+                    <div className="resultado-previsao" dangerouslySetInnerHTML={{ __html: this.state.result }} />
                     <form onSubmit={ this.handleSubmit } autoComplete="off">
                         <InputCustomizado 
                             type = "text" 
