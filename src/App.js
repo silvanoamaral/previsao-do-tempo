@@ -50,21 +50,30 @@ class App extends React.Component {
             if(data.query.results.channel) {
                 const channel = data.query.results.channel;
 
+                let next__day = '';
+
+                channel.item.forecast.forEach(element => {
+                    //console.log(element);
+                    next__day += `<li>day  ${ element.day} High ${ element.high } Low ${ element.low }</li>`;
+                    //console.log('High',element.high,'Low',element.low,'day',element.day);
+                });
+
                 const result = `
                     <div class="result">
                         <p><strong>${ channel.location.city }, ${ channel.location.region } - ${ channel.location.country }</strong></p>
                         <p><strong>${ channel.item.condition.temp }°C ${ channel.item.condition.text } </strong></p>
                         <p>
-                            <span class="high-low">high ${ channel.item.forecast.high } - low ${ channel.item.forecast.low }</span>
+                            <span class="high-low">high ${ channel.item.forecast[0].high } - low ${ channel.item.forecast[0].low }</span>
                             <span>Sensação <strong>${ channel.item.condition.code }°C</strong></span>
                         </p>
                         <p>
                             <span>Vento <strong>${ channel.wind.speed }Km/h</strong></span>
                             <span>Humidade <strong>${ channel.atmosphere.humidity }%</strong></span>
                         </p>
+                        <ul class="next-day">${ next__day }</ul>
                     </div>
                 `;
-                
+
                 //console.log(result);
                 const msg = "Temperature in " + channel.location.city + " is " + data.query.results.channel.item.condition.temp + "°C";
 
@@ -74,8 +83,7 @@ class App extends React.Component {
                 });
             } else {
                 throw new Error("Could not reach the API: ");
-            }
-              
+            }              
         }).catch(function(error) {
             //console.log('Error',error);
             const msg = error.message;
@@ -85,17 +93,11 @@ class App extends React.Component {
         });
     }
 
-    unescapeHTML(html) {
-        var escapeEl = document.createElement('textarea');
-        escapeEl.innerHTML = html;
-        return escapeEl.textContent;
-    }
-
     render() {
         return (
             <section className="jumbotron text-center">
                 <div className="container">
-                    <h1 className="jumbotron-heading">Previsão do tempo</h1>
+                    <h1 className="jumbotron-heading"></h1>
                     <div className="resultado-previsao" dangerouslySetInnerHTML={{ __html: this.state.result }} />
                     <form onSubmit={ this.handleSubmit } autoComplete="off">
                         <InputCustomizado 
