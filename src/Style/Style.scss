@@ -1,12 +1,37 @@
+* {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+$border-next-day: #000;
+
 form {
     p {
         color: blue;
         font-size: 14px;
     }
 }
+
 .resultado-previsao {
     .result {
         background: #fff;
-        padding: 15px 0 5px 0;
+        padding: 15px;
+    }
+
+    .next-day {
+        margin: 0px;
+        padding-top: 15px;
+        border-top: 1px solid $border-next-day;
+
+        li {
+            display: inline-block;
+            margin-right: 20px;
+            text-align: left;
+
+            span {
+                display: block;
+            }
+        }
     }
 }

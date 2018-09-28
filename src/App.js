@@ -53,9 +53,7 @@ class App extends React.Component {
                 let next__day = '';
 
                 channel.item.forecast.forEach(element => {
-                    //console.log(element);
-                    next__day += `<li>day  ${ element.day} High ${ element.high } Low ${ element.low }</li>`;
-                    //console.log('High',element.high,'Low',element.low,'day',element.day);
+                    next__day += `<li><span>${ element.day }</span>  ${ element.low }º ${ element.high }º </li>`;
                 });
 
                 const result = `
@@ -63,7 +61,7 @@ class App extends React.Component {
                         <p><strong>${ channel.location.city }, ${ channel.location.region } - ${ channel.location.country }</strong></p>
                         <p><strong>${ channel.item.condition.temp }°C ${ channel.item.condition.text } </strong></p>
                         <p>
-                            <span class="high-low">high ${ channel.item.forecast[0].high } - low ${ channel.item.forecast[0].low }</span>
+                            <span class="high-low"><i class="fa fa fa-arrow-down"></i> ${ channel.item.forecast[0].low } <i class="fa fa-arrow-up" aria-hidden="true"></i> ${ channel.item.forecast[0].high }</span>
                             <span>Sensação <strong>${ channel.item.condition.code }°C</strong></span>
                         </p>
                         <p>
@@ -97,7 +95,7 @@ class App extends React.Component {
         return (
             <section className="jumbotron text-center">
                 <div className="container">
-                    <h1 className="jumbotron-heading"></h1>
+                    <h1 className="jumbotron-heading">Previsão do tempo</h1>
                     <div className="resultado-previsao" dangerouslySetInnerHTML={{ __html: this.state.result }} />
                     <form onSubmit={ this.handleSubmit } autoComplete="off">
                         <InputCustomizado 
