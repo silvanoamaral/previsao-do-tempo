@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import InputCustomizado from "./components/InputCustomizado";
+import InputCustomizado from './components/InputCustomizado';
+import Icons from './components/Icons';
 
 import './Style/Style.scss';
 
@@ -65,7 +66,7 @@ class App extends React.Component {
                             <span>Sensação <strong>${ channel.item.condition.code }°C</strong></span>
                         </p>
                         <p>
-                            <span>Vento <strong>${ channel.wind.speed }Km/h</strong></span>
+                            <span>Vento <strong>${ typeof channel.wind.speed === 'number' ? channel.wind.speed.toFixed(0) : parseFloat(channel.wind.speed).toFixed(0) }Km/h</strong></span>
                             <span>Humidade <strong>${ channel.atmosphere.humidity }%</strong></span>
                         </p>
                         <ul class="next-day">${ next__day }</ul>
@@ -95,7 +96,7 @@ class App extends React.Component {
         return (
             <section className="jumbotron text-center">
                 <div className="container">
-                    <h1 className="jumbotron-heading">Previsão do tempo</h1>
+                    <h1 className="jumbotron-heading">Previsão do tempo <img src={ Icons.rainy } /></h1>
                     <div className="resultado-previsao" dangerouslySetInnerHTML={{ __html: this.state.result }} />
                     <form onSubmit={ this.handleSubmit } autoComplete="off">
                         <InputCustomizado 
